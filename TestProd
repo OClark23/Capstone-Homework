@@ -1,0 +1,91 @@
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+public class CheckoutTest {
+  
+  @Test
+  public void testCalculateTotal_DE_NoTax() {
+    // Arrange
+    Checkout checkout = new Checkout();
+    String state = "DE";
+    Record[] records = {new Record("WIC Eligible food", 10.0), new Record("Clothing", 20.0), new Record("Everything else", 30.0)};
+    double expectedTotal = 60.0;
+    
+    // Act
+    double actualTotal = checkout.calculateTotal(state, records);
+    
+    // Assert
+    assertEquals(expectedTotal, actualTotal, 0.001);
+  }
+  
+  @Test
+  public void testCalculateTotal_NJ_TaxableClothing() {
+    // Arrange
+    Checkout checkout = new Checkout();
+    String state = "NJ";
+    Record[] records = {new Record("WIC Eligible food", 10.0), new Record("Fur clothing", 20.0), new Record("Everything else", 30.0)};
+    double expectedTotal = 63.32;
+    
+    // Act
+    double actualTotal = checkout.calculateTotal(state, records);
+    
+    // Assert
+    assertEquals(expectedTotal, actualTotal, 0.001);
+  }
+  
+  @Test
+  public void testCalculateTotal_NJ_ExemptClothing() {
+    // Arrange
+    Checkout checkout = new Checkout();
+    String state = "NJ";
+    Record[] records = {new Record("WIC Eligible food", 10.0), new Record("Shirt", 20.0), new Record("Everything else", 30.0)};
+    double expectedTotal = 63.0;
+    
+    // Act
+    double actualTotal = checkout.calculateTotal(state, records);
+    
+    // Assert
+    assertEquals(expectedTotal, actualTotal, 0.001);
+  }
+  
+  @Test
+  public void testCalculateTotal_PA_ExemptClothing() {
+    // Arrange
+    Checkout checkout = new Checkout();
+    String state = "PA";
+    Record[] records = {new Record("WIC Eligible food", 10.0), new Record("Shirt", 20.0), new Record("Everything else", 30.0)};
+    double expectedTotal = 63.0;
+    
+    // Act
+    double actualTotal = checkout.calculateTotal(state, records);
+    
+    // Assert
+    assertEquals(expectedTotal, actualTotal, 0.001);
+  }
+  
+  @Test
+  public void testCalculateTotal_PA_TaxableClothing() {
+    // Arrange
+    Checkout checkout = new Checkout();
+    String state = "PA";
+    Record[] records = {new Record("WIC Eligible food", 10.0), new Record("Fur clothing", 20.0), new Record("Everything else", 30.0)};
+    double expectedTotal = 63.6;
+    
+    // Act
+    double actualTotal = checkout.calculateTotal(state, records);
+    
+    // Assert
+    assertEquals(expectedTotal, actualTotal, 0.001);
+  }
+  
+  @Test
+  public void testCalculateTotal_DefaultTax() {
+    // Arrange
+    Checkout checkout = new Checkout();
+    String state = "NY";
+    Record[] records = {new Record("WIC Eligible food", 10.0), new Record("Shirt", 20.0), new Record("Everything else", 30.0)};
+    double expectedTotal = 69.06;
+    
+    // Act
+    double actualTotal = checkout.calculateTotal(state, records);
+    
