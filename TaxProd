@@ -1,0 +1,71 @@
+import java.util.List;
+
+public class Checkout {
+    
+    // Method to calculate the total amount to be charged to the customer
+    public static double calculateTotal(String state, List<ItemRecord> items) {
+        double total = 0.0;
+        double taxRate = 0.0;
+        
+        // Set the tax rate based on the state
+        switch(state.toUpperCase()) {
+            case "DE":
+                taxRate = 0.0;
+                break;
+            case "NJ":
+                taxRate = 0.066;
+                break;
+            case "PA":
+                taxRate = 0.06;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid state provided");
+        }
+        
+        // Iterate through the list of items to calculate the total amount
+        for(ItemRecord item : items) {
+            if(item.getItemType().equals("Wic Eligible food")) {
+                // WIC Eligible food is tax-exempt in all three states
+                total += item.getPrice();
+            } else if(item.getItemType().equals("Clothing")) {
+                if(state.toUpperCase().equals("PA") || 
+                   (state.toUpperCase().equals("NJ") && !item.getItemName().toLowerCase().contains("fur"))) {
+                    // Clothing is exempt from sales tax in PA and NJ, except for fur clothing in NJ
+                    total += item.getPrice();
+                } else {
+                    total += item.getPrice() * (1 + taxRate);
+                }
+            } else {
+                // Everything else is taxed at the default tax rate
+                total += item.getPrice() * (1 + taxRate);
+            }
+        }
+        
+        return total;
+    }
+}
+
+// ItemRecord class to hold information about the item
+class ItemRecord {
+    private String itemName;
+    private double price;
+    private String itemType;
+    
+    public ItemRecord(String itemName, double price, String itemType) {
+        this.itemName = itemName;
+        this.price = price;
+        this.itemType = itemType;
+    }
+    
+    public String getItemName() {
+        return itemName;
+    }
+    
+    public double getPrice() {
+        return price;
+    }
+    
+    public String getItemType() {
+        return itemType;
+    }
+}
